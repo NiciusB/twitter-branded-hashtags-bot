@@ -4,10 +4,14 @@ let hashtagsList = {}
 const debugAlreadyTweeted = new Set()
 
 module.exports.updateList = newList => {
-  // Sort by starting timestamp descending
+  // Sort by starting timestamp descending, endingTimestampMs ascending, and hashtag ascending
   hashtagsList = newList.sort((a, b) => {
     if (a.startingTimestampMs > b.startingTimestampMs) return -1
     if (a.startingTimestampMs < b.startingTimestampMs) return 1
+    if (a.endingTimestampMs > b.endingTimestampMs) return 1
+    if (a.endingTimestampMs < b.endingTimestampMs) return -1
+    if (a.hashtag > b.hashtag) return 1
+    if (a.hashtag < b.hashtag) return -1
     return 0
   })
 }
@@ -19,9 +23,9 @@ module.exports.getNewHashtag = async () => {
   let lastHashtagIndex = hashtagsList.findIndex(h => h.hashtag === lastHashtag)
   if (lastHashtagIndex === -1) {
     console.warn('Last hashtag not found in hashtags list. Restarting from newest hashtag')
-    lastHashtagIndex = hashtagsList.length - 2
+    lastHashtagIndex = 1
   }
-  const nextHashtagIndex = lastHashtagIndex + 1
+  const nextHashtagIndex = lastHashtagIndex - 1
   if (nextHashtagIndex > hashtagsList.length - 1) {
     // We finished the list
     return false
