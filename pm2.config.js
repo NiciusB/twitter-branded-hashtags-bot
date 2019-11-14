@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'BrandedHashtagsBot',
-      script: './src/index.js',
+      script: './index.js',
       env: {
         NODE_ENV: 'production',
       },
